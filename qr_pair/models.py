@@ -45,7 +45,7 @@ class QRCode(models.Model):
     @property
     def qr_svg_string(self) -> str:
         """
-        Returns QR Code as SVG string
+        Returns QR Code SVGimage as a string
         """
         qr = segno.make(str(self.id))
         return qr.svg_inline(scale=5)
