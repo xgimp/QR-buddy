@@ -1,0 +1,45 @@
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    container_name: qr_buddies_web
+    image: qr_buddies_web
+    privileged: true
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - web_db:/app/data
+      - ./app:/app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    depends_on:
+      valkey:
+        condition: service_healthy
+    # env_file:
+    #   - ./.env
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+  
+  valkey:
+    image: valkey/valkey:7.2-alpine
+    container_name: valkey
+    command: valkey-server /etc/valkey/valkey.conf --save 60 1
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - ./compose/valkey/valkey.conf:/etc/valkey/valkey.conf
+      - valkey-data:/data
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+volumes:
+  web_db:
+  static_volume:
+  media_volume:
+  valkey-data:

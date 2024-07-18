@@ -22,7 +22,9 @@ class QRMatch(models.Model):
 
 class QRCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    pair = models.ForeignKey(QRMatch, on_delete=models.CASCADE, related_name='paired_qr')
+    pair = models.ForeignKey(
+        QRMatch, on_delete=models.CASCADE, related_name="paired_qr"
+    )
 
     def clean(self):
         if QRCode.objects.filter(pair=self.pair).count() == 2:
