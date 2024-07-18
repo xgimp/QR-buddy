@@ -5,15 +5,16 @@ from django.core.exceptions import ValidationError
 from django.db import models, transaction
 
 
-class QRMatch(models.Model):
+class ChatRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     @transaction.atomic
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        while QRCode.objects.filter(pair=self).count() < 2:
-            QRCode.objects.create(pair=self)
+        while QRCode.objects.filter(chat_room=self).count() < 2:
+            QRCode.objects.create(chat_room=self)
         super().save()
 
     def __str__(self):
@@ -22,18 +23,20 @@ class QRMatch(models.Model):
 
 class QRCode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    pair = models.ForeignKey(
-        QRMatch, on_delete=models.CASCADE, related_name="paired_qr"
+    chat_room = models.ForeignKey(
+        ChatRoom, on_delete=models.CASCADE, related_name="paired_qr"
     )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def clean(self):
-        if QRCode.objects.filter(pair=self.pair).count() == 2:
+        if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
             raise ValidationError("Already got 2 QR codes")
+        return super().clean()
 
     # def save(
     #     self, force_insert=False, force_update=False, using=None, update_fields=None
     # ):
-    #     if QRCode.objects.filter(pair=self.pair).count() == 2:
+    #     if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
     #         raise ValidationError("Already got 2 QR codes")
     #     super().save()
 
@@ -42,7 +45,7 @@ class QRCode(models.Model):
         """
         Returns the other QR from the pair
         """
-        return self.pair.paired_qr.exclude(id=self.id).first()
+        return self.chat_room.paired_qr.exclude(id=self.id).first()
 
     @property
     def qr_svg_string(self) -> str:

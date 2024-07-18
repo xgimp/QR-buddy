@@ -7,10 +7,10 @@
     My QR:
 </h2>
 {{object.qr_svg_string|safe}}
-<br>room id: {{object.pair.pk}}
+<br>room id: {{object.chat_room.pk}}
 
 <h2>
     My QR buddy
 </h2>
 {{object.matching_qr.qr_svg_string|safe}}
-<br>room id: {{object.matching_qr.pair.pk}}
+<br>room id: {{object.matching_qr.chat_room.pk}}
