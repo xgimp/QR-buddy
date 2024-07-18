@@ -25,7 +25,7 @@ services:
   valkey:
     image: valkey/valkey:7.2-alpine
     container_name: valkey
-    command: valkey-server /etc/valkey/valkey.conf --save 60 1
+    command: valkey-server /etc/valkey/valkey.conf
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 1s
