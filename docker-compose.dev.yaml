@@ -10,7 +10,7 @@ services:
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
-      - web_db:/app/data
+#      - web_db:/app/data
       - ./app:/app
     restart: unless-stopped
     ports:
@@ -33,7 +33,6 @@ services:
       retries: 5
     volumes:
       - ./compose/valkey/valkey.conf:/etc/valkey/valkey.conf
-      - valkey-data:/data
     ports:
       - 6379:6379
     restart: unless-stopped
@@ -42,4 +41,3 @@ volumes:
   web_db:
   static_volume:
   media_volume:
-  valkey-data:
