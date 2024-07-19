@@ -3,6 +3,9 @@ import segno
 
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from django.db.models import Q
+
+from chat.models import Message
 
 
 class ChatRoom(models.Model):
@@ -25,7 +28,7 @@ class ChatRoom(models.Model):
         return self.paired_qr.filter(chat_room=self)
 
     def __str__(self):
-        return f"match {self.id}"
+        return f"Chat Room ID: {self.id}"
 
 
 class QRCode(models.Model):
@@ -68,6 +71,14 @@ class QRCode(models.Model):
         Returns chat Room URL
         """
         return f"/chat/{self.chat_room.id}/{self.id}"
+
+    @property
+    def chat_history(self):
+        """
+        Return Chat history for room based on sender ID
+        """
+        history = Message.objects.filter(Q(sender=self) | Q(sender=self.matching_qr))
+        return history.order_by("sent_at")
 
     def __str__(self):
         return f"{self.id}"

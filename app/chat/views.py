@@ -22,5 +22,11 @@ def room(request, room_name, user_id):
         raise Http404("no permission")
 
     return render(
-        request, "chat/room.html", {"room_name": str(room.id), "user_id": str(user.id)}
+        request,
+        "chat/room.html",
+        {
+            "room_name": str(room.id),
+            "user_id": str(user.id),
+            "history": user.chat_history,
+        },
     )
