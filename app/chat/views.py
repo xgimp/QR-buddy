@@ -27,6 +27,6 @@ def room(request, room_name, user_id):
         {
             "room_name": str(room.id),
             "user_id": str(user.id),
-            "history": user.chat_history,
+            "history": list(user.chat_history.values()),
         },
     )
