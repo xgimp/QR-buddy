@@ -10,7 +10,7 @@ from qr_pair.models import ChatRoom, QRCode
 # https://stackoverflow.com/questions/64188904/django-channels-save-messages-to-database
 class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
-    def create_chat(self, message, sender):
+    def save_chat_message(self, message, sender):
         chat_room = ChatRoom.objects.get(id=self.room_name)
         sndr = QRCode.objects.get(id=sender, chat_room=chat_room)
         return Message.objects.create(sender=sndr, message=message)
@@ -38,24 +38,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json["message"]
         sender = text_data_json["sender"]
 
+        # It is necessary to await creation of messages
+        new_msg = await self.save_chat_message(message=message, sender=sender)
+
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
-            {"type": "chat.message", "message": message, "sender": sender},
+            {
+                "type": "chat.message",
+                "message": new_msg.message,
+                "sender": str(new_msg.sender),
+            },
         )
 
     async def chat_message(self, event):
         """
         Receive message from room group
         """
-
-        # It is necessary to await creation of messages
-        new_msg = await self.create_chat(
-            message=event["message"], sender=event["sender"]
-        )
         # Send message to WebSocket
         await self.send(
             text_data=json.dumps(
-                {"message": new_msg.message, "sender": str(new_msg.sender)}
+                {"message": event["message"], "sender": event["sender"]}
             )
         )
