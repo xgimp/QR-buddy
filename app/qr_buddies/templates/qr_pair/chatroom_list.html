@@ -1,0 +1,10 @@
+<ul>
+    {% for obj in object_list %}
+    <li>
+        Chat Room '{{obj}}'
+        <a href="{% url 'qr_pair:chat_room_detail_view' obj.pk %}">
+            detail
+        </a>
+    </li>
+    {% endfor %}
+</ul>

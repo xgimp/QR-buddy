@@ -17,6 +17,13 @@ class ChatRoom(models.Model):
             QRCode.objects.create(chat_room=self)
         super().save()
 
+    @property
+    def get_qr_codes(self):
+        """
+        Return QR codes that have access to this room
+        """
+        return self.paired_qr.filter(chat_room=self)
+
     def __str__(self):
         return f"match {self.id}"
 
@@ -52,8 +59,15 @@ class QRCode(models.Model):
         """
         Returns QR Code SVGimage as a string
         """
-        qr = segno.make(str(self.id))
+        qr = segno.make(self.chat_room_link)
         return qr.svg_inline(scale=5)
+
+    @property
+    def chat_room_link(self):
+        """
+        Returns chat Room URL
+        """
+        return f"/chat/{self.chat_room.id}/{self.id}"
 
     def __str__(self):
         return f"{self.id}"

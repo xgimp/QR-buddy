@@ -1,11 +1,11 @@
 from django.views.generic import DetailView, ListView
 
-from qr_pair.models import QRCode
+from qr_pair.models import ChatRoom
 
 
-class QRCodeDetailView(DetailView):
-    model = QRCode
+class ChatRoomDetailView(DetailView):
+    model = ChatRoom
 
 
-class QRCodeListView(ListView):
-    model = QRCode
+class ChatRoomListView(ListView):
+    model = ChatRoom
