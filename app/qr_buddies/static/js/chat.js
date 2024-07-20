@@ -5,7 +5,7 @@ const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').va
 const chatWindow = document.querySelector('#chat');
 const messageInputDom = document.querySelector('#chat-message-input');
 const chatSubmitButton = document.querySelector('#chat-message-submit');
-const messageForm = document.getElementById('chat-form');
+const messageForm = document.querySelector('#chat-form');
 const errorElement = document.getElementById('invalid-helper');
 
 const chatSocket = new WebSocket(
@@ -38,19 +38,25 @@ messageInputDom.addEventListener('input', (event) => {
 history.forEach(element => {
     chatWindow.appendChild(createChatBubble(element));
 });
-chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
+let lastElement = chatWindow.querySelector("div.row:last-child")
+if (chatWindow.querySelector("div.row:last-child")) {
+    lastElement.scrollIntoView(false);
+}
 
 
 // attach message to the textarea
 chatSocket.onmessage = function (element) {
     const data = JSON.parse(element.data);
     chatWindow.appendChild(createChatBubble(data));
-    chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
+    let lastElement = chatWindow.querySelector("div.row:last-child");
+    if (lastElement) {
+        chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
+    }
 };
 
 
 // disconnect from WS
-chatSocket.onclose = function(e) {
+chatSocket.onclose = function(_) {
     console.error('Chat socket closed unexpectedly');
 };
 
@@ -121,8 +127,10 @@ function processForm(event) {
             // delete previous input value
             messageInputDom.value = '';
             chatSubmitButton.disabled = true;
-            chatWindow.querySelector("div.row:last-child")
-                .scrollIntoView(false);
+            let lastElement = chatWindow.querySelector("div.row:last-child");
+            if (lastElement) {
+                lastElement.scrollIntoView(false);
+            }
         };
     })
     .catch(error => console.error(error));
