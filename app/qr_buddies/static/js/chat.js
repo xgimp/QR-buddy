@@ -37,23 +37,20 @@ messageInputDom.addEventListener('input', (event) => {
 // attach chat history entries to the chat element
 history.forEach(element => {
     chatWindow.appendChild(createChatBubble(element));
-    chatWindow.querySelector("div.row:last-child")
-    .scrollIntoView(false);
 });
+chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
 
 
 // attach message to the textarea
 chatSocket.onmessage = function (element) {
     const data = JSON.parse(element.data);
-    // chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
     chatWindow.appendChild(createChatBubble(data));
-    chatWindow.querySelector("div.row:last-child")
-    .scrollIntoView(false);
+    chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
 };
 
 
 // disconnect from WS
-chatSocket.onclose = function (e) {
+chatSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
 
