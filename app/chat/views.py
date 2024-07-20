@@ -1,25 +1,22 @@
 from django.core.exceptions import ValidationError
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import FormView
 
+from chat.auth import is_permitted
+from chat.forms import ChatForm
 from qr_pair.models import ChatRoom, QRCode
 
 
 def room(request, room_name, user_id):
     # TODO: refactor
-    try:
-        user = QRCode.objects.get(id=user_id)
-    except (QRCode.DoesNotExist, ValidationError):
-        raise Http404("User does not exists")
 
-    try:
-        room = ChatRoom.objects.get(id=room_name)
-    except (ChatRoom.DoesNotExist, ValidationError):
-        raise Http404("Chat room does not exist.")
+    if not is_permitted(room_name=room_name, user_id=user_id):
+        raise Http404("user is not permitted")
 
-    has_permission = user.chat_room.id == room.id
-    if not has_permission:
-        raise Http404("no permission")
+    user = get_object_or_404(QRCode, id=user_id)
+    room = get_object_or_404(ChatRoom, id=room_name)
+    chat_form = ChatForm
 
     return render(
         request,
@@ -28,5 +25,17 @@ def room(request, room_name, user_id):
             "room_name": str(room.id),
             "user_id": str(user.id),
             "history": list(user.chat_history.values()),
+            "chat_form": chat_form,
         },
     )
+
+
+class SendMessage(FormView):
+    form_class = ChatForm
+    http_method_names = ["post"]
+
+    def form_valid(self, form):
+        pass
+
+    def form_invalid(self, form):
+        pass
