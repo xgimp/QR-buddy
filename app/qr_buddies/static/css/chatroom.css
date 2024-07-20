@@ -1,0 +1,32 @@
+.container {
+    margin-top: 1rem;
+}
+#invalid-helper {
+    color: var(--pico-form-element-invalid-focus-color);
+}
+#chat {
+    max-height: 40vw;
+    overflow-x:hidden;
+    overflow-y: scroll;
+    
+}
+.me, .buddy {
+    width: fit-content;
+}
+.conntainer-me {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.container-buddy {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.me {
+    background-color: var(--pico-primary-background);
+    border: 2px solid var(--pico-primary-border);
+}
+.buddy {
+    background-color: var(--pico-secondary-background)
+}
