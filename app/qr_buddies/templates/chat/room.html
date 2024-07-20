@@ -2,47 +2,12 @@
 {% load static %}
 
 {% block extra_css %}
-<style>
-    textarea {
-        min-height: 30vw;
-        max-height: 80vw;
-    }
-    #invalid-helper {
-        color: var(--pico-form-element-invalid-focus-color);
-    }
-    #chat {
-        
-    }
-    .me, .buddy {
-        width: fit-content;
-    }
-    .conntainer-me {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-    }
-    .container-buddy {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-    }
-    .me {
-        background-color: var(--pico-primary-background);
-        border: 2px solid var(--pico-primary-border);
-    }
-    .buddy {
-        background-color: var(--pico-secondary-background)
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/chatroom.css' %}">
 {% endblock extra_css %}
 
 
 {% block content %}
 <div class="container">
-
-    <h2>
-        chat room
-    </h2>
 
     <div class="row">
         

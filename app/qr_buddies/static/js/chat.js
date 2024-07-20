@@ -2,7 +2,7 @@ const roomName = JSON.parse(document.getElementById('room-name').textContent);
 const userId = JSON.parse(document.getElementById('user-id').textContent);
 const history = JSON.parse(document.getElementById('history').textContent);
 const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-// const chatLog = document.querySelector('#chat-log');
+const chatWindow = document.querySelector('#chat');
 const messageInputDom = document.querySelector('#chat-message-input');
 const chatSubmitButton = document.querySelector('#chat-message-submit');
 const messageForm = document.getElementById('chat-form');
@@ -36,7 +36,9 @@ messageInputDom.addEventListener('input', (event) => {
 
 // attach chat history entries to the chat element
 history.forEach(element => {
-    document.querySelector('#chat').appendChild(createChatBubble(element));
+    chatWindow.appendChild(createChatBubble(element));
+    chatWindow.querySelector("div.row:last-child")
+    .scrollIntoView(false);
 });
 
 
@@ -44,7 +46,9 @@ history.forEach(element => {
 chatSocket.onmessage = function (element) {
     const data = JSON.parse(element.data);
     // chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
-    document.querySelector('#chat').appendChild(createChatBubble(data));
+    chatWindow.appendChild(createChatBubble(data));
+    chatWindow.querySelector("div.row:last-child")
+    .scrollIntoView(false);
 };
 
 
@@ -120,6 +124,8 @@ function processForm(event) {
             // delete previous input value
             messageInputDom.value = '';
             chatSubmitButton.disabled = true;
+            chatWindow.querySelector("div.row:last-child")
+                .scrollIntoView(false);
         };
     })
     .catch(error => console.error(error));
