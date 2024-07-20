@@ -3,23 +3,59 @@
 <html>
 <head>
     <meta charset="utf-8"/>
+    <meta name="color-scheme" content="light dark" />
     <title>Chat Room</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <style>
+        textarea {
+            min-height: 30vw;
+            max-height: 80vw;
+        }
+    </style>
 </head>
 <body>
-<h2>
-    chat room
-</h2>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+
+    <div class="container">
+
+        <h2>
+            chat room
+        </h2>
+
+        <div class="row">
+            <textarea id="chat-log" readonly></textarea>
+        </div>
+
+        <div role="group">
+            <input id="chat-message-input" type="text">
+            <input id="chat-message-submit" type="button" value="Send" disabled>
+        </div>
+
+    </div>
+
     {{ room_name|json_script:"room-name" }}
     {{ user_id|json_script:"user-id" }}
     {{ history|json_script:"history" }}
+
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
         const userId = JSON.parse(document.getElementById('user-id').textContent);
         const history = JSON.parse(document.getElementById('history').textContent);
-        const chatLog = document.querySelector('#chat-log')
+        const chatLog = document.querySelector('#chat-log');
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const chatSubmitButton = document.querySelector('#chat-message-submit');
+
+        messageInputDom.addEventListener('input',  (event) => {
+            chatSubmitButton.disabled = true;
+            if (
+                !(
+                    event.target.value == '' ||
+                    event.target.value == this.defaultValue ||
+                    !event.target.value.replace(/\s/g, '').length
+                )
+            ) {
+                chatSubmitButton.disabled = false;
+            }
+        })
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -38,28 +74,29 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += ('[' + data.sender + ']:' + data.message + '\n');
+            chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
         };
 
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
 
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        messageInputDom.focus();
+        messageInputDom.onkeyup = function(e) {
             if (e.key === 'Enter') {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+                chatSubmitButton.click();
             }
         };
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
+            
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'sender': userId,
             }));
             messageInputDom.value = '';
+            chatSubmitButton.disabled = true;
         };
     </script>
 </body>
