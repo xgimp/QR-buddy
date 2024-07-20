@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
 <ul>
     {% for obj in object_list %}
     <li>
@@ -8,3 +12,5 @@
     </li>
     {% endfor %}
 </ul>
+    
+{% endblock content %}

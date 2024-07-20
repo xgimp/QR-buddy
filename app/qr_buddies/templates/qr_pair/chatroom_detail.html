@@ -1,3 +1,15 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+.segno {
+    background: #fff
+}
+</style>
+{% endblock extra_css %}
+
+
+{% block content %}
 <h1>
     Room {{object}}
 </h1>
@@ -23,3 +35,5 @@
 <a href="{{object.paired_qr.last.chat_room_link}}" target="blank">
     otevrit chat
 </a>
+
+{% endblock content %}
