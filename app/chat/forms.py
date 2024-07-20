@@ -1,5 +1,5 @@
 from django import forms
-
+from django.http import JsonResponse
 
 from chat.models import Message
 
@@ -24,8 +24,7 @@ class ChatForm(forms.ModelForm):
         message = self.cleaned_data["message"]
 
         if not message:
-            raise ValueError("message cannot be empty")
-        if len(message) < 10:
-            raise ValueError("message must be at leas 10 characters long")
-
+            raise forms.ValidationError("Message cannot be empty")
+        if len(message) < 2:
+            raise forms.ValidationError("message must be at least 2 characters long")
         return message

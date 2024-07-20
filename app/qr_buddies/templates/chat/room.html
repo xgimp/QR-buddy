@@ -7,6 +7,9 @@
         min-height: 30vw;
         max-height: 80vw;
     }
+    #invalid-helper {
+        color: var(--pico-form-element-invalid-focus-color);
+    }
 </style>
 {% endblock extra_css %}
 
@@ -22,13 +25,14 @@
         <textarea id="chat-log" readonly></textarea>
     </div>
 
-    <form>
+    <form id="chat-form" method="POST" action="{% url 'chat:send_message' %}">
         {% csrf_token %}
+
         <fieldset role="group">
             {{chat_form.message}}
             <input id="chat-message-submit" type="button" value="Send" disabled>
         </fieldset>
-<!--            <small id="invalid-helper">Please provide a valid value!</small>-->
+        <small id="invalid-helper"></small>
     </form>
 </div><!--/container-->
 

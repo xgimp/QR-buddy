@@ -1,10 +1,12 @@
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 const userId = JSON.parse(document.getElementById('user-id').textContent);
 const history = JSON.parse(document.getElementById('history').textContent);
-
+const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 const chatLog = document.querySelector('#chat-log');
 const messageInputDom = document.querySelector('#chat-message-input');
 const chatSubmitButton = document.querySelector('#chat-message-submit');
+const messageForm = document.getElementById('chat-form');
+const errorElement = document.getElementById('invalid-helper');
 
 const chatSocket = new WebSocket(
     'ws://'
@@ -45,10 +47,12 @@ chatSocket.onmessage = function (e) {
     chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
 };
 
+
 // disconnect from WS
 chatSocket.onclose = function (e) {
     console.error('Chat socket closed unexpectedly');
 };
+
 
 // set focus to message unput
 // enable message to be sent by pressing Enter
@@ -59,14 +63,65 @@ messageInputDom.onkeyup = function (e) {
     }
 };
 
-// submit data
-chatSubmitButton.onclick = function (e) {
 
+// submit fom by click on the send button
+chatSubmitButton.onclick = processForm;
+
+
+messageForm.addEventListener('submit', processForm);
+
+
+function processForm(event) {
+    event.preventDefault();
+
+    let formData = new FormData();
     const message = messageInputDom.value;
-    chatSocket.send(JSON.stringify({
-        'message': message,
-        'sender': userId,
-    }));
-    messageInputDom.value = '';
-    chatSubmitButton.disabled = true;
-};
+
+    formData.append('message', message);
+    formData.append('sender', userId);
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    console.log(formData);
+
+    fetch('/chat/send', {
+        method: 'POST',
+        body: formData,
+
+    })
+    .then(response => response.json())
+    .then((data) => {
+        console.log('data');
+        console.log(data);  
+        if (data.valid == false) {
+            // add invalid attr to message input
+            messageInputDom.setAttribute('aria-invalid', 'true');
+            messageInputDom.setAttribute('aria-describedby', 'invalid-helper');
+            // show validaton error
+            // clear previous error messages first
+            errorElement.innerHTML = '';
+            data.errors.message.forEach((elem) => {
+                errorElement.appendChild(document.createTextNode(elem))
+            })
+
+        }
+        else {
+            // valid data
+
+            // clear errors first
+            messageInputDom.removeAttribute('aria-invalid');
+            messageInputDom.removeAttribute('aria-describedby');
+            errorElement.innerHTML = '';
+
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender': userId,
+            }));
+            
+            // delete previous input value
+            messageInputDom.value = '';
+            chatSubmitButton.disabled = true;
+        };
+    })
+    .catch(error => console.error(error));
+}
