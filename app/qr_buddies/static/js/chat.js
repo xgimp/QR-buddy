@@ -2,7 +2,7 @@ const roomName = JSON.parse(document.getElementById('room-name').textContent);
 const userId = JSON.parse(document.getElementById('user-id').textContent);
 const history = JSON.parse(document.getElementById('history').textContent);
 const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-const chatLog = document.querySelector('#chat-log');
+// const chatLog = document.querySelector('#chat-log');
 const messageInputDom = document.querySelector('#chat-message-input');
 const chatSubmitButton = document.querySelector('#chat-message-submit');
 const messageForm = document.getElementById('chat-form');
@@ -34,17 +34,17 @@ messageInputDom.addEventListener('input', (event) => {
 })
 
 
-// attach chat history entries to the textarea
-chatLog.value = ''
+// attach chat history entries to the chat element
 history.forEach(element => {
-    chatLog.value += ('[' + element.sender_id + ']:' + element.message + '\n');
+    document.querySelector('#chat').appendChild(createChatBubble(element));
 });
 
 
 // attach message to the textarea
-chatSocket.onmessage = function (e) {
-    const data = JSON.parse(e.data);
-    chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
+chatSocket.onmessage = function (element) {
+    const data = JSON.parse(element.data);
+    // chatLog.value += ('[' + data.sender + ']:' + data.message + '\n');
+    document.querySelector('#chat').appendChild(createChatBubble(data));
 };
 
 
@@ -90,12 +90,12 @@ function processForm(event) {
     })
     .then(response => response.json())
     .then((data) => {
-        console.log('data');
-        console.log(data);  
+        // console.log('data');
+        // console.log(data);  
         if (data.valid == false) {
             // add invalid attr to message input
             messageInputDom.setAttribute('aria-invalid', 'true');
-            messageInputDom.setAttribute('aria-describedby', 'invalid-helper');
+
             // show validaton error
             // clear previous error messages first
             errorElement.innerHTML = '';
@@ -109,19 +109,32 @@ function processForm(event) {
 
             // clear errors first
             messageInputDom.removeAttribute('aria-invalid');
-            messageInputDom.removeAttribute('aria-describedby');
             errorElement.innerHTML = '';
 
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message,
-                'sender': userId,
+                'sender_id': userId,
             }));
-            
+
             // delete previous input value
             messageInputDom.value = '';
             chatSubmitButton.disabled = true;
         };
     })
     .catch(error => console.error(error));
+}
+
+
+function createChatBubble(element) {
+    let row = document.createElement('div')
+    row.classList.add('row')
+    row.classList.add(element.sender_id == userId ? "conntainer-me" : "container-buddy")
+
+    let bubbleElement = document.createElement('article');
+    bubbleElement.className = element.sender_id == userId ? "me" : "buddy";
+    bubbleElement.appendChild(document.createTextNode(element.message));
+
+    row.appendChild(bubbleElement);
+    return row
 }

@@ -10,6 +10,29 @@
     #invalid-helper {
         color: var(--pico-form-element-invalid-focus-color);
     }
+    #chat {
+        
+    }
+    .me, .buddy {
+        width: fit-content;
+    }
+    .conntainer-me {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+    .container-buddy {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .me {
+        background-color: var(--pico-primary-background);
+        border: 2px solid var(--pico-primary-border);
+    }
+    .buddy {
+        background-color: var(--pico-secondary-background)
+    }
 </style>
 {% endblock extra_css %}
 
@@ -22,7 +45,10 @@
     </h2>
 
     <div class="row">
-        <textarea id="chat-log" readonly></textarea>
+        
+        <article id="chat"></article>
+        
+        {% comment %} <textarea id="chat-log" readonly></textarea> {% endcomment %}
     </div>
 
     <form id="chat-form" method="POST" action="{% url 'chat:send_message' %}">

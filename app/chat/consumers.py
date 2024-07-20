@@ -47,7 +47,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         """
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
-        sender = text_data_json["sender"]
+        sender = text_data_json["sender_id"]
 
         # It is necessary to await creation of messages
         new_msg = await self.save_chat_message(message=message, sender=sender)
@@ -58,7 +58,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 "type": "chat.message",
                 "message": new_msg.message,
-                "sender": str(new_msg.sender),
+                "sender_id": str(new_msg.sender),
             },
         )
 
@@ -69,6 +69,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(
             text_data=json.dumps(
-                {"message": event["message"], "sender": event["sender"]}
+                {"message": event["message"], "sender_id": event["sender_id"]}
             )
         )
