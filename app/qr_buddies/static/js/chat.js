@@ -6,7 +6,8 @@ const chatWindow = document.querySelector('#chat');
 const messageInputDom = document.querySelector('#chat-message-input');
 const chatSubmitButton = document.querySelector('#chat-message-submit');
 const messageForm = document.querySelector('#chat-form');
-const errorElement = document.getElementById('invalid-helper');
+const errorHelper = document.getElementById('invalid-helper');
+const errorBanner = document.getElementById('error');
 
 const chatSocket = new WebSocket(
     'ws://'
@@ -57,6 +58,9 @@ chatSocket.onmessage = function (element) {
 
 // disconnect from WS
 chatSocket.onclose = function(_) {
+    errorBanner.style.display = 'block';
+    messageInputDom.disabled = 'true';
+    chatSubmitButton.disabled = 'true';
     console.error('Chat socket closed unexpectedly');
 };
 
@@ -105,9 +109,9 @@ function processForm(event) {
 
             // show validaton error
             // clear previous error messages first
-            errorElement.innerHTML = '';
+            errorHelper.innerHTML = '';
             data.errors.message.forEach((elem) => {
-                errorElement.appendChild(document.createTextNode(elem))
+                errorHelper.appendChild(document.createTextNode(elem))
             })
 
         }
@@ -116,7 +120,7 @@ function processForm(event) {
 
             // clear errors first
             messageInputDom.removeAttribute('aria-invalid');
-            errorElement.innerHTML = '';
+            errorHelper.innerHTML = '';
 
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({

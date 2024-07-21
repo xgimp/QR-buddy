@@ -1,6 +1,10 @@
 .container {
     margin-top: 1rem;
 }
+#error {
+    display: none;
+    background-color: var(--pico-form-element-invalid-focus-color);
+}
 #invalid-helper {
     color: var(--pico-form-element-invalid-focus-color);
 }
