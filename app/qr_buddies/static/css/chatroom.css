@@ -13,7 +13,7 @@
 .me, .buddy {
     width: fit-content;
 }
-.conntainer-me {
+.container-me {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;

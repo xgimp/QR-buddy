@@ -38,8 +38,8 @@ messageInputDom.addEventListener('input', (event) => {
 history.forEach(element => {
     chatWindow.appendChild(createChatBubble(element));
 });
-let lastElement = chatWindow.querySelector("div.row:last-child")
-if (chatWindow.querySelector("div.row:last-child")) {
+let lastElement = chatWindow.querySelector('div.row:last-child')
+if (chatWindow.querySelector('div.row:last-child')) {
     lastElement.scrollIntoView(false);
 }
 
@@ -48,9 +48,9 @@ if (chatWindow.querySelector("div.row:last-child")) {
 chatSocket.onmessage = function (element) {
     const data = JSON.parse(element.data);
     chatWindow.appendChild(createChatBubble(data));
-    let lastElement = chatWindow.querySelector("div.row:last-child");
+    let lastElement = chatWindow.querySelector('div.row:last-child');
     if (lastElement) {
-        chatWindow.querySelector("div.row:last-child").scrollIntoView(false);
+        lastElement.scrollIntoView(false);
     }
 };
 
@@ -127,7 +127,7 @@ function processForm(event) {
             // delete previous input value
             messageInputDom.value = '';
             chatSubmitButton.disabled = true;
-            let lastElement = chatWindow.querySelector("div.row:last-child");
+            let lastElement = chatWindow.querySelector('div.row:last-child');
             if (lastElement) {
                 lastElement.scrollIntoView(false);
             }
@@ -138,12 +138,12 @@ function processForm(event) {
 
 
 function createChatBubble(element) {
-    let row = document.createElement('div')
-    row.classList.add('row')
-    row.classList.add(element.sender_id == userId ? "conntainer-me" : "container-buddy")
+    let row = document.createElement('div');
+    row.classList.add('row');
+    row.classList.add(element.sender_id == userId ? 'container-me' : 'container-buddy');
 
     let bubbleElement = document.createElement('article');
-    bubbleElement.className = element.sender_id == userId ? "me" : "buddy";
+    bubbleElement.className = element.sender_id == userId ? 'me' : 'buddy';
     bubbleElement.appendChild(document.createTextNode(element.message));
 
     row.appendChild(bubbleElement);
