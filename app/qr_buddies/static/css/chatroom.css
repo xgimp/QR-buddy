@@ -25,8 +25,12 @@
 }
 .me {
     background-color: var(--pico-primary-background);
-    border: 2px solid var(--pico-primary-border);
 }
 .buddy {
     background-color: var(--pico-secondary-background)
+}
+
+[data-theme=light],
+:root:not([data-theme=dark]) {
+  --pico-color: #c2c7d0
 }
