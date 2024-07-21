@@ -39,8 +39,8 @@ messageInputDom.addEventListener('input', (event) => {
 history.forEach(element => {
     chatWindow.appendChild(createChatBubble(element));
 });
-let lastElement = chatWindow.querySelector('div.row:last-child')
-if (chatWindow.querySelector('div.row:last-child')) {
+let lastElement = chatWindow.querySelector('div.row:last-child');
+if (lastElement) {
     lastElement.scrollIntoView(false);
 }
 
