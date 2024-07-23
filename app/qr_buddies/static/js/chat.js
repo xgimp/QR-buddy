@@ -57,11 +57,11 @@ chatSocket.onmessage = function (element) {
 
 
 // disconnect from WS
-chatSocket.onclose = function(_) {
+chatSocket.onclose = function(e) {
     errorBanner.style.display = 'block';
     messageInputDom.disabled = 'true';
     chatSubmitButton.disabled = 'true';
-    console.error('Chat socket closed unexpectedly');
+    console.error('Chat socket closed unexpectedly: ', e);
 };
 
 
@@ -76,7 +76,7 @@ messageInputDom.onkeyup = function (e) {
 
 
 // submit fom by click on the send button
-chatSubmitButton.onclick = processForm;
+chatSubmitButton.addEventListener('click', processForm);
 
 
 messageForm.addEventListener('submit', processForm);
@@ -92,17 +92,12 @@ function processForm(event) {
     formData.append('sender', userId);
     formData.append('csrfmiddlewaretoken', csrfToken);
 
-    console.log(formData);
-
     fetch('/chat/send', {
         method: 'POST',
         body: formData,
-
     })
     .then(response => response.json())
     .then((data) => {
-        // console.log('data');
-        // console.log(data);  
         if (data.valid == false) {
             // add invalid attr to message input
             messageInputDom.setAttribute('aria-invalid', 'true');

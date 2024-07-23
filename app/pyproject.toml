@@ -1,0 +1,24 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "qr_buddies.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = ["-p", "no:warnings", "--no-migrations", "--reuse-db"]
+
+[tool.coverage.run]
+source = ["."]
+omit = ["*/migrations/*", "*/tests/*", "*/venv/*", "manage.py"]
+# Django plugin slows things down significantely
+plugins = ["django_coverage_plugin"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+

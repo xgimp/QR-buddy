@@ -4,9 +4,9 @@ from django.views.generic import DetailView, ListView
 from qr_pair.models import ChatRoom
 
 
-class ChatRoomDetailView(LoginRequiredMixin, DetailView):
+class ChatRoomDetailView(DetailView):
     model = ChatRoom
 
 
-class ChatRoomListView(LoginRequiredMixin, ListView):
+class ChatRoomListView(ListView):
     model = ChatRoom

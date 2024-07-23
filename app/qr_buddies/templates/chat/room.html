@@ -14,10 +14,11 @@
     </article>
 
     <div class="row">
-        
-        <section id="chat"></section>
-        
-        {% comment %} <textarea id="chat-log" readonly></textarea> {% endcomment %}
+        <section id="chat">
+        {% comment %} 
+            Chat history is displayed here 
+        {% endcomment %}
+        </section>
     </div>
 
     <form id="chat-form" method="POST" action="{% url 'chat:send_message' %}">
@@ -27,7 +28,11 @@
             {{chat_form.message}}
             <input id="chat-message-submit" type="button" value="Send" disabled>
         </fieldset>
-        <small id="invalid-helper"></small>
+        <small id="invalid-helper">
+            {% comment %} 
+                Space to display validation errors in
+            {% endcomment %}
+        </small>
     </form>
 </main><!--/container-->
 

@@ -1,4 +1,5 @@
 import uuid
+
 import segno
 
 from django.core.exceptions import ValidationError
@@ -43,12 +44,12 @@ class QRCode(models.Model):
             raise ValidationError("Already got 2 QR codes for this room")
         return super().clean()
 
-    # def save(
-    #     self, force_insert=False, force_update=False, using=None, update_fields=None
-    # ):
-    #     if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
-    #         raise ValidationError("Already got 2 QR codes")
-    #     super().save()
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
+            raise ValidationError("Already got 2 QR codes for this room")
+        super().save()
 
     @property
     def matching_qr(self):
