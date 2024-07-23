@@ -19,12 +19,3 @@ class ChatForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ("message",)
-
-    def clean_message(self):
-        message = self.cleaned_data["message"]
-
-        if not message:
-            raise forms.ValidationError("Message cannot be empty")
-        if len(message) < 2:
-            raise forms.ValidationError("message must be at least 2 characters long")
-        return message

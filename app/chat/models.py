@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Message(models.Model):
-    message = models.TextField()
+    message = models.TextField(null=False, blank=False)
     sender = models.ForeignKey("qr_pair.QRCode", on_delete=models.CASCADE)
     sent_at = models.DateTimeField(auto_now_add=True)
 

@@ -42,7 +42,6 @@ class QRCode(models.Model):
     def clean(self):
         if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
             raise ValidationError("Already got 2 QR codes for this room")
-        return super().clean()
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None

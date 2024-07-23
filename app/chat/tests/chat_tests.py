@@ -1,3 +1,4 @@
+import json
 from uuid import UUID
 
 import pytest
@@ -6,7 +7,7 @@ from django.test import Client
 from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
 
-from chat.tests.chat_room_factory import ChatRoomFactory
+from chat.tests.chat_room_factory import ChatRoomFactory, MessageFactory
 from qr_pair.models import QRCode
 
 
@@ -66,7 +67,7 @@ class TestChat:
         """
         assert chat_room.get_qr_codes.count() == 2
 
-    def test_can_assign_more_than_two_qr_codes_to_room(self, chat_room):
+    def test_cant_assign_more_than_two_qr_codes_to_room(self, chat_room):
         """
         Test that we cannot assign more than two QR Codes to chat room.
         """
@@ -75,3 +76,68 @@ class TestChat:
             QRCode.objects.create(chat_room=chat_room)
         assert exc_info.type is ValidationError
         assert exc_info.value.args[0] == "Already got 2 QR codes for this room"
+
+    def test_qr_models_clean_method(self, chat_room):
+        """
+        Test that clean() raises ValidationError if room already got two QR codes assigned.
+        So user cant assign additional (third) QR code in Django Admin.
+        """
+        with pytest.raises(ValidationError) as exc_info:
+            # 'chat_room' already got 2 QR codes generated for it, so this should fail
+            QRCode(chat_room=chat_room).clean()
+        assert exc_info.type is ValidationError
+        assert exc_info.value.args[0] == "Already got 2 QR codes for this room"
+
+    def test_message_str_representation(self, chat_room):
+        """
+        Test that string representation of Message model instance is in intended format.
+        """
+        sender = chat_room.get_qr_codes.first()
+        message = MessageFactory.create(message="hi", sender=sender)
+        assert str(message) == f"[{sender}]:{message.message}"
+
+    def test_chat_room_str_representation(self, chat_room):
+        """
+        Test that string representation of ChatRoom model instance is in intended format.
+        """
+        assert str(chat_room) == f"Chat Room ID: {chat_room.pk}"
+
+    def test_chat_room_link(self, chat_room):
+        """
+        Test that chat_room_link() returns valid (chat) room URL path.
+        """
+        qr_code = chat_room.get_qr_codes.first()
+        assert qr_code.chat_room_link == f"/chat/{chat_room.pk}/{qr_code.pk}"
+
+    def test_qr_svg_string(self, chat_room):
+        """
+        Test that qr_svg_string() returns SVG string.
+        """
+        # TODO: improve this
+        svg_str = chat_room.get_qr_codes.first().qr_svg_string
+        assert "<svg", "</svg>" in svg_str
+
+    def test_chat_form_valid_message(self):
+        """
+        Test that SendMessage returns 'valid message' JSON if user enters valid message.
+        """
+        client = Client()
+
+        post_url = reverse("chat:send_message")
+        response = client.post(path=post_url, data={"message": "test"})
+        data = json.loads(response.content)
+        assert response.status_code == 200
+        assert data["valid"] is True
+
+    def test_chat_form_invalid_message(self):
+        """
+        Test that SendMessage returns 'invalid message' JSON if user enters invalid (empty) message.
+        """
+        client = Client()
+
+        post_url = reverse("chat:send_message")
+        response = client.post(path=post_url, data={"message": ""})
+        data = json.loads(response.content)
+        assert response.status_code == 200
+        assert data["valid"] is False
+        assert data["errors"]["message"][0] == "This field is required."
