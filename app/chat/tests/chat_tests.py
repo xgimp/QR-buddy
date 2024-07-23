@@ -41,7 +41,10 @@ class TestChat:
         )
         response = client.get(chat_room_url)
 
-        assert not non_existing_user_id == chat_room.pk
+        assert non_existing_user_id not in (
+            chat_room.get_qr_codes.first().pk,
+            chat_room.get_qr_codes.last().pk,
+        )
         assert response.status_code == 404
 
     def test_user_can_access_chat(self, chat_room):
@@ -61,7 +64,7 @@ class TestChat:
         """
         Test that chat room is created with exactly two QR Codes.
         """
-        assert len(chat_room.get_qr_codes) == 2
+        assert chat_room.get_qr_codes.count() == 2
 
     def test_can_assign_more_than_two_qr_codes_to_room(self, chat_room):
         """
