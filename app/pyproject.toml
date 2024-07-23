@@ -5,7 +5,16 @@ addopts = ["-p", "no:warnings", "--no-migrations", "--reuse-db"]
 
 [tool.coverage.run]
 source = ["."]
-omit = ["*/migrations/*", "*/tests/*", "*/venv/*", "*/requirements/*", "manage.py"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/venv/*",
+    "*/static/*",
+    "*/requirements/*",
+    "*/asgi.py",
+    "chat/routing.py",
+    "*/wsgi.py",
+    "manage.py"]
 # Django plugin slows things down significantely
 plugins = ["django_coverage_plugin"]
 
