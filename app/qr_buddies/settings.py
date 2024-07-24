@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -24,9 +26,11 @@ PROJECT_DIR = Path(__file__).resolve().parent
 SECRET_KEY = "django-insecure-8%6z&z+3ff=f7h&f3t@8^^l$5y^i_qnt0^=6p_q061zz8oc1!6"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS", cast=lambda host: [line.strip() for line in host.split(" ")]
+)
 
 
 # Application definition
@@ -147,7 +151,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 if DEBUG:
     # https://github.com/jazzband/django-debug-toolbar/issues/1035#issuecomment-938229549
