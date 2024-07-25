@@ -11,22 +11,21 @@ from chat.tests.chat_room_factory import ChatRoomFactory
 # TODO: create communicator fixture?
 
 
-class TestCommunicator:
-    async def test_socket_connection_is_successful_if_user_authorized(self):
-        """
-        Test that websocket connection is successful if user is authorized.
-        """
-        room = "439ce734-1baf-4a1e-abee-77e5a2149cc5"
-        qr_id = "ac8297e7-c41d-4b94-a88e-673087269166"
-        url_path = f"/ws/chat/{room}/{qr_id}/"
-        communicator = WebsocketCommunicator(URLRouter(websocket_urlpatterns), url_path)
+async def test_socket_connection_is_successful_if_user_authorized():
+    """
+    Test that websocket connection is successful if user is authorized.
+    """
+    room = "439ce734-1baf-4a1e-abee-77e5a2149cc5"
+    qr_id = "ac8297e7-c41d-4b94-a88e-673087269166"
+    url_path = f"/ws/chat/{room}/{qr_id}/"
+    communicator = WebsocketCommunicator(URLRouter(websocket_urlpatterns), url_path)
 
-        communicator.scope["user"] = "ac8297e7-c41d-4b94-a88e-673087269166"
-        connected, _ = await communicator.connect()
-        assert connected
+    communicator.scope["user"] = "ac8297e7-c41d-4b94-a88e-673087269166"
+    connected, _ = await communicator.connect()
+    assert connected
 
-        # Close
-        await communicator.disconnect()
+    # Close
+    await communicator.disconnect()
 
 
 async def test_socket_connection_is_closed_if_user_not_authorized():
