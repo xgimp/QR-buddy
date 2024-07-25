@@ -7,9 +7,9 @@ from django.utils.asyncio import async_unsafe
 
 # https://blog.pecar.me/sqlite-django-config
 class DatabaseWrapper(base.DatabaseWrapper):
-    def _start_transaction_under_autocommit(self):
-        # Acquire a write lock immediately for transactions
-        self.cursor().execute("BEGIN IMMEDIATE")
+    # def _start_transaction_under_autocommit(self):
+    #     # Acquire a write lock immediately for transactions
+    #     self.cursor().execute("BEGIN IMMEDIATE")
 
     @async_unsafe
     def get_new_connection(self, conn_params):

@@ -2,6 +2,7 @@
 DJANGO_SETTINGS_MODULE = "qr_buddies.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 addopts = ["-p", "no:warnings", "--no-migrations", "--reuse-db"]
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 source = ["."]
@@ -12,9 +13,9 @@ omit = [
     "*/static/*",
     "*/requirements/*",
     "*/asgi.py",
-    "chat/routing.py",
     "*/wsgi.py",
-    "manage.py"]
+    "manage.py"
+]
 # Django plugin slows things down significantely
 plugins = ["django_coverage_plugin"]
 

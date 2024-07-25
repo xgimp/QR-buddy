@@ -12,7 +12,7 @@ from qr_pair.models import QRCode
 
 
 @pytest.mark.django_db
-class TestChat:
+class TestChatRoom:
     @pytest.fixture
     def chat_room(self):
         return ChatRoomFactory.create()
@@ -28,6 +28,7 @@ class TestChat:
             "chat:room", kwargs={"room_name": chat_room.pk, "user_id": chat_room_qr.id}
         )
         response = client.get(chat_room_url)
+        assert response.status_code == 200
         assertTemplateUsed(response=response, template_name="chat/room.html")
 
     def test_non_existing_user_cant_access_chat(self, chat_room):

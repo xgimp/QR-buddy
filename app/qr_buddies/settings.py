@@ -79,6 +79,7 @@ TEMPLATES = [
         "DIRS": [PROJECT_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
+            "debug": DEBUG,
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
@@ -97,7 +98,8 @@ WSGI_APPLICATION = "qr_buddies.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "qr_buddies.sqlite3",
+        # "ENGINE": "qr_buddies.sqlite3",
+        "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "data" / "db.sqlite3",
     }
 }
@@ -164,3 +166,10 @@ if DEBUG:
     }
     MIDDLEWARE.insert(-1, "debug_toolbar.middleware.DebugToolbarMiddleware")
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    #
+    # DATABASES = {
+    #     "default": {
+    #         "ENGINE": "django.db.backends.sqlite3",
+    #         "NAME": BASE_DIR / "data" / "db.sqlite3",
+    #     }
+    # }

@@ -1,38 +1,52 @@
 import json
+from pprint import pprint
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from chat.auth import is_permitted
 from chat.models import Message
 from qr_pair.models import ChatRoom, QRCode
 
 
 # https://stackoverflow.com/questions/64188904/django-channels-save-messages-to-database
 class ChatConsumer(AsyncWebsocketConsumer):
-    @database_sync_to_async
-    def can_join(self, room_name, user_id) -> bool:
-        return is_permitted(room_name=room_name, user_id=user_id)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.room_group_name = None
+        self.user = None
+        self.room_name = None
 
     @database_sync_to_async
     def save_chat_message(self, message, sender):
+        """
+        Saves user's message to the database.
+        """
+        chat_room_exists = ChatRoom.objects.filter(id=self.room_name).exists()
+
+        if not chat_room_exists:
+            raise ValueError("chat room does not exists")
+
         chat_room = ChatRoom.objects.get(id=self.room_name)
+        sender_exists = QRCode.objects.filter(id=sender, chat_room=chat_room).exists()
+
+        if not sender_exists:
+            raise ValueError("Sender does not exists")
+
         sndr = QRCode.objects.get(id=sender, chat_room=chat_room)
         return Message.objects.create(sender=sndr, message=message)
 
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.user_id = self.scope["url_route"]["kwargs"]["user_id"]
-
+        self.user = self.scope["url_route"]["kwargs"]["user_id"]
         self.room_group_name = f"chat_{self.room_name}"
 
-        if not self.can_join(self.room_name, self.user_id):
-            await self.disconnect(403)
-            return
+        _user = self.scope.get("user")
+
+        if not _user:
+            return await self.close(reason="not authorized")
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
         await self.accept()
 
     async def disconnect(self, close_code):
