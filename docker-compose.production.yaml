@@ -1,5 +1,25 @@
 services:
 
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/production/nginx/Dockerfile
+    volumes:
+      - static_volume:/app/static
+    networks:
+      - traefik-proxy
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qr_buddies.entrypoints=web,websecure"
+      - "traefik.http.routers.qr_buddies.rule=Host(`chat.bacovsky.online`)"
+      - "traefik.http.routers.qr_buddies.tls=true"
+      - "traefik.http.routers.qr_buddies.tls.certresolver=production"
+#      - "traefik.http.routers.qr_buddies.middlewares=redirect-www-to-non-www@file"
+    depends_on:
+      - web
+
+
   web:
     build:
       context: .
@@ -14,12 +34,6 @@ services:
       - web_db:/app/data
     networks:
       - traefik-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.qr_buddies.entrypoints=web,websecure"
-      - "traefik.http.routers.qr_buddies.rule=Host(`chat.bacovsky.online`)"
-      - "traefik.http.routers.qr_buddies.tls=true"
-      - "traefik.http.routers.qr_buddies.tls.certresolver=production"
     restart: unless-stopped
     # ports:
     #   - "8000:8000"
