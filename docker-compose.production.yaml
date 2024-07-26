@@ -14,6 +14,12 @@ services:
       - web_db:/app/data
     networks:
       - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qr_buddies.entrypoints=web,websecure"
+      - "traefik.http.routers.qr_buddies.rule=Host(`chat.bacovsky.online`)"
+      - "traefik.http.routers.qr_buddies.tls=true"
+      - "traefik.http.routers.qr_buddies.tls.certresolver=production"
     restart: unless-stopped
     # ports:
     #   - "8000:8000"
