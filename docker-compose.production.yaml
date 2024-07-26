@@ -9,11 +9,11 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qr_buddies.entrypoints=web,websecure"
-      - "traefik.http.routers.qr_buddies.rule=Host(`chat.bacovsky.online`)"
-      - "traefik.http.routers.qr_buddies.tls=true"
-      - "traefik.http.routers.qr_buddies.tls.certresolver=production"
-#      - "traefik.http.routers.qr_buddies.middlewares=redirect-www-to-non-www@file"
+      - "traefik.http.routers.qrbuds.tls.certresolver=production"
+      - "traefik.http.routers.qrbuds.tls=true"
+      - "traefik.http.routers.qrbuds.entrypoints=web,websecure"
+      - "traefik.http.routers.qrbuds.rule=Host(`chat.bacovsky.online`) || Host(`www.chat.bacovsky.online`)"
+      - "traefik.http.routers.qrbuds.middlewares=redirect-www@file"
     depends_on:
       - web
 
