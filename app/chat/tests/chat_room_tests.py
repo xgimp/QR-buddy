@@ -1,7 +1,9 @@
 import json
+from urllib.parse import urljoin
 from uuid import UUID
 
 import pytest
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import Client
 from django.urls import reverse
@@ -108,7 +110,9 @@ class TestChatRoom:
         Test that chat_room_link() returns valid (chat) room URL path.
         """
         qr_code = chat_room.get_qr_codes.first()
-        assert qr_code.chat_room_link == f"/chat/{chat_room.pk}/{qr_code.pk}"
+        assert qr_code.chat_room_link == urljoin(
+            settings.DOMAIN, f"/chat/{chat_room.pk}/{qr_code.pk}/"
+        )
 
     def test_qr_svg_string(self, chat_room):
         """

@@ -1,7 +1,9 @@
 import uuid
+from urllib.parse import urljoin
 
 import segno
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models import Q
@@ -70,7 +72,7 @@ class QRCode(models.Model):
         """
         Returns chat Room URL
         """
-        return f"/chat/{self.chat_room.id}/{self.id}"
+        return urljoin(settings.DOMAIN, f"/chat/{self.chat_room.id}/{self.id}/")
 
     @property
     def chat_history(self):

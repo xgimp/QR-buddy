@@ -31,7 +31,7 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS", cast=lambda host: [line.strip() for line in host.split(" ")]
 )
-
+DOMAIN = config("DOMAIN", default="http://localhost:8000")
 
 # Application definition
 
