@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+{% block extra_css %}
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container h1 {
+        text-align: center;
+    }
+</style>
+{% endblock extra_css %}
+ 
+
+{% block body_class %}
+    index container
+{% endblock body_class %}
+    
+
+{% block content %}
+<h1>
+    QR Buddy
+</h1>
+{% endblock content %}
