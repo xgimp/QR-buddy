@@ -5,6 +5,7 @@ from asgiref.sync import sync_to_async
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
 
+from chat.consumers import save_chat_message
 from chat.routing import websocket_urlpatterns
 from chat.tests.chat_room_factory import ChatRoomFactory
 
@@ -73,3 +74,36 @@ async def test_socket_connection_send_message():
 
     # Close
     await communicator.disconnect()
+
+
+@pytest.mark.django_db
+def test_save_message_value_error_if_room_name_does_not_exist():
+    """
+    Test that save_chat_message() if nonexistent chat room ID is given.
+    """
+    nonexistent_room_name = "ac8297e7-c41d-4b94-a88e-673087269166"
+    nonexistent_sender = "ac8297e7-c41d-4b94-a88e-673087269166"
+    with pytest.raises(ValueError) as exc_info:
+        save_chat_message(
+            room_name=nonexistent_room_name, sender=nonexistent_sender, message="test"
+        )
+    assert exc_info.type is ValueError
+    assert exc_info.value.args[0] == "chat room does not exists"
+
+
+@pytest.mark.django_db
+def test_save_message_value_error_if_sender_does_not_exist():
+    """
+    Test that save_chat_message() if nonexistent sender is given.
+    """
+    existing_room_name = ChatRoomFactory.create()
+    nonexistent_sender = "ac8297e7-c41d-4b94-a88e-673087269166"
+
+    with pytest.raises(ValueError) as exc_info:
+        save_chat_message(
+            room_name=str(existing_room_name.pk),
+            sender=nonexistent_sender,
+            message="test",
+        )
+    assert exc_info.type is ValueError
+    assert exc_info.value.args[0] == "Sender does not exists"
