@@ -7,19 +7,15 @@
 
 
 {% block content %}
-<main class="container">
+<main class="container-fluid">
 
     <article id="error">
         Chat socket closed unexpectedly. Please refresh the page.
     </article>
 
-    <div class="row">
-        <section id="chat">
-        {% comment %} 
-            Chat history is displayed here 
-        {% endcomment %}
-        </section>
-    </div>
+    <section id="chat">
+        {# Chat history is displayed here #}
+    </section>
 
     <form id="chat-form" method="POST" action="{% url 'chat:send_message' %}">
         {% csrf_token %}
@@ -28,12 +24,9 @@
             {{chat_form.message}}
             <input id="chat-message-submit" type="button" value="Send" disabled>
         </fieldset>
-        <small id="invalid-helper">
-            {% comment %} 
-                Space to display validation errors in
-            {% endcomment %}
-        </small>
+        <small id="invalid-helper">{# Space to display validation errors in #}</small>
     </form>
+
 </main><!--/container-->
 
 {{ room_name|json_script:"room-name" }}
@@ -43,8 +36,7 @@
 {% endblock content %}
 
 
-
 {% block extra_js %}
-    <script src="{% static 'js/chat.js' %}"></script>
+<script src="{% static 'js/chat.js' %}"></script>
 {% endblock extra_js %}
     

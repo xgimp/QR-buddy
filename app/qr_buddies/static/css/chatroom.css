@@ -9,8 +9,7 @@
     color: var(--pico-form-element-invalid-focus-color);
 }
 #chat {
-    min-height: 5vw;
-    max-height: 95vw;
+    height: 82vh;
     overflow-x: hidden;
     overflow-y: scroll;
 }

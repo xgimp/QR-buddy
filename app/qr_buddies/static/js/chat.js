@@ -59,6 +59,7 @@ chatSocket.onmessage = function (element) {
 // disconnect from WS
 chatSocket.onclose = function(e) {
     errorBanner.style.display = 'block';
+    chatWindow.style.height = '75vh';
     messageInputDom.disabled = 'true';
     chatSubmitButton.disabled = 'true';
     console.error('Chat socket closed unexpectedly: ', e);
