@@ -5,4 +5,4 @@ repos:
     - id: ruff-format
       args: [ ./app/ ]
     - id: ruff
-      args: [ check --fix  ]
+      args: [ ./app/, --fix ]
