@@ -1,9 +1,7 @@
 services:
 
   nginx:
-    build:
-      context: .
-      dockerfile: ./compose/production/nginx/Dockerfile
+    build: ./compose/production/nginx/
     volumes:
       - static_volume:/app/static
     networks:
@@ -18,7 +16,6 @@ services:
 #      - "traefik.http.routers.qr_buddies.middlewares=redirect-www-to-non-www@file"
     depends_on:
       - web
-
 
   web:
     build:
@@ -35,13 +32,9 @@ services:
     networks:
       - traefik-proxy
     restart: unless-stopped
-    # ports:
-    #   - "8000:8000"
     depends_on:
       valkey:
         condition: service_healthy
-    # env_file:
-    #   - ./.env
     command: >
       sh -c "python manage.py collectstatic --no-input &&
              daphne -b 0.0.0.0 -p 8000 qr_buddies.asgi:application"
