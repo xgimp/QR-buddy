@@ -4,7 +4,7 @@ repos:
   hooks:
     # Run the linter.
     - id: ruff
-      args: [ ./app/, --fix ]
+      args: [ ./app/, --fix, --config, ./app/pyproject.toml ]
     # Run the formatter
     - id: ruff-format
-      args: [ ./app/ ]
+      args: [ ./app/, --config, ./app/pyproject.toml ]
