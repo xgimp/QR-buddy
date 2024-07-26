@@ -69,8 +69,9 @@ chatSocket.onclose = function(e) {
 // set focus to message unput
 // enable message to be sent by pressing Enter
 messageInputDom.focus();
-messageInputDom.addEventListener('keyup', (e) => {
+messageInputDom.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {  // enter, return
+        e.preventDefault();
         chatSubmitButton.click();
     }
 });
