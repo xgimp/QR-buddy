@@ -1,5 +1,4 @@
 from django import forms
-from django.http import JsonResponse
 
 from chat.models import Message
 

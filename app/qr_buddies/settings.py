@@ -98,8 +98,8 @@ WSGI_APPLICATION = "qr_buddies.wsgi.application"
 
 DATABASES = {
     "default": {
-        # "ENGINE": "qr_buddies.sqlite3",
-        "ENGINE": "django.db.backends.sqlite3",
+        "ENGINE": "qr_buddies.sqlite3",
+        # "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "data" / "db.sqlite3",
     }
 }

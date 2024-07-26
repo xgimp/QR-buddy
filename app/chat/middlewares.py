@@ -1,5 +1,4 @@
 from channels.db import database_sync_to_async
-from channels.middleware import BaseMiddleware
 
 from chat.auth import is_permitted
 
