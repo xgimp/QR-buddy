@@ -10,6 +10,9 @@ ARG BUILD_ENVIRONMENT
 COPY /app/requirements/base.txt /base.txt
 COPY /app/requirements/${BUILD_ENVIRONMENT}.txt /requirements.txt
 
+# Install deps for requirements
+RUN apk add gcc musl-dev libffi-dev
+
 # Create Python Dependency and Sub-Dependency Wheels.
 RUN python -m pip wheel \
       --no-cache-dir \
@@ -28,7 +31,7 @@ ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
 # Install dependencies for psycopg2 and Pillow
-RUN apk add --no-cache libgcc libjpeg libwebp libpq
+#RUN apk add --no-cache libgcc libjpeg libwebp libpq
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
