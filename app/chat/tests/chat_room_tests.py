@@ -19,12 +19,14 @@ class TestChatRoom:
     def chat_room(self):
         return ChatRoomFactory.create()
 
-    def test_room_view(self, chat_room):
+    @pytest.fixture
+    def client(self):
+        return Client()
+
+    def test_room_view(self, chat_room, client):
         """
         Test that right template is used.
         """
-        client = Client()
-
         chat_room_qr = chat_room.get_qr_codes.first()
         chat_room_url = reverse(
             "chat:room", kwargs={"room_name": chat_room.pk, "user_id": chat_room_qr.id}
@@ -33,11 +35,10 @@ class TestChatRoom:
         assert response.status_code == 200
         assertTemplateUsed(response=response, template_name="chat/room.html")
 
-    def test_non_existing_user_cant_access_chat(self, chat_room):
+    def test_non_existing_user_cant_access_chat(self, chat_room, client):
         """
         Test that user that can't access room that is not paired with his QR Code.
         """
-        client = Client()
         non_existing_user_id = UUID("2e9cd1e8-969b-4e15-bb9c-18d8d2e8d003")
         chat_room_url = reverse(
             "chat:room",
@@ -51,12 +52,10 @@ class TestChatRoom:
         )
         assert response.status_code == 404
 
-    def test_user_can_access_chat(self, chat_room):
+    def test_user_can_access_chat(self, chat_room, client):
         """
         Test that user that can access room that is paired with his QR Code.
         """
-        client = Client()
-
         chat_room_qr = chat_room.get_qr_codes.first()
         chat_room_url = reverse(
             "chat:room", kwargs={"room_name": chat_room.pk, "user_id": chat_room_qr.id}
@@ -105,14 +104,16 @@ class TestChatRoom:
         """
         assert str(chat_room) == f"Chat Room ID: {chat_room.pk}"
 
-    def test_chat_room_link(self, chat_room):
+    def test_chat_room_link(self, chat_room, client):
         """
         Test that chat_room_link() returns valid (chat) room URL path.
         """
         qr_code = chat_room.get_qr_codes.first()
-        assert qr_code.chat_room_link == urljoin(
-            settings.DOMAIN, f"/chat/{chat_room.pk}/{qr_code.pk}/"
-        )
+        expected_link = urljoin(settings.DOMAIN, f"/chat/{chat_room.pk}/{qr_code.pk}/")
+        assert qr_code.chat_room_link == expected_link
+        # Make sure that the link works
+        response = client.get(expected_link)
+        assert response.status_code == 200
 
     def test_qr_svg_string(self, chat_room):
         """
