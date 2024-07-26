@@ -69,12 +69,11 @@ chatSocket.onclose = function(e) {
 // set focus to message unput
 // enable message to be sent by pressing Enter
 messageInputDom.focus();
-messageInputDom.onkeyup = function (e) {
+messageInputDom.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') {  // enter, return
         chatSubmitButton.click();
     }
-};
-
+});
 
 // submit fom by click on the send button
 chatSubmitButton.addEventListener('click', processForm);
