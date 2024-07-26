@@ -5,23 +5,27 @@ services:
       context: .
       dockerfile: ./app/Dockerfile
       args:
-        - BUILD_ENVIRONMENT=dev  # dev|production
+        - BUILD_ENVIRONMENT=production  # dev|production
     container_name: qr_buddies_web
     image: qr_buddies_web
-    privileged: true
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
-      - ./app:/app
+      - web_db:/app/data
+    networks:
+      - traefik-proxy
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     depends_on:
       valkey:
         condition: service_healthy
     # env_file:
     #   - ./.env
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: >
+      sh -c "python manage.py collectstatic --no-input &&
+             daphne -b 0.0.0.0 -p 8000 qr_buddies.asgi:application"
+             
   
   valkey:
     image: valkey/valkey:7.2-alpine
@@ -33,12 +37,17 @@ services:
       timeout: 3s
       retries: 5
     volumes:
-      - ./compose/dev/valkey/valkey.conf:/etc/valkey/valkey.conf
-    ports:
-      - 6379:6379
+      - ./compose/production/valkey/valkey.conf:/etc/valkey/valkey.conf
+    # ports:
+    #   - 6379:6379
     restart: unless-stopped
 
 volumes:
   web_db:
   static_volume:
   media_volume:
+
+
+networks:
+  traefik-proxy:
+    external: true

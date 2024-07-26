@@ -1,21 +1,14 @@
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION=3.12
-FROM docker.io/python:${PYTHON_VERSION}-alpine as build-stage
 
-# Install dependencies for building Python packages
-# RUN apk add --no-cache \
-#   build-base \
-#   jpeg-dev \
-#   zlib-dev \
-#   libjpeg \
-#   libwebp-dev \
-#   postgresql-dev \
-#   cargo \
-#   rust
+ARG PYTHON_VERSION=3.12
+
+
+FROM docker.io/python:${PYTHON_VERSION}-alpine as build-stage
+ARG BUILD_ENVIRONMENT
 
 COPY /app/requirements/base.txt /base.txt
-COPY /app/requirements/dev.txt /requirements.txt
+COPY /app/requirements/${BUILD_ENVIRONMENT}.txt /requirements.txt
 
 # Create Python Dependency and Sub-Dependency Wheels.
 RUN python -m pip wheel \
