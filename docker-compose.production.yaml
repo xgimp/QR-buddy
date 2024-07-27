@@ -37,7 +37,7 @@ services:
         condition: service_healthy
     command: >
       sh -c "python manage.py collectstatic --no-input &&
-             daphne -b 0.0.0.0 -p 8000 qr_buddies.asgi:application"
+             daphne -b 0.0.0.0 -p 9001 qr_buddies.asgi:application"
              
   
   valkey:
