@@ -8,9 +8,10 @@ const chatSubmitButton = document.querySelector('#chat-message-submit');
 const messageForm = document.querySelector('#chat-form');
 const errorHelper = document.getElementById('invalid-helper');
 const errorBanner = document.getElementById('error');
+const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 
 const chatSocket = new WebSocket(
-    window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+    wsProtocol
     + window.location.host
     + '/ws/chat/'
     + roomName
