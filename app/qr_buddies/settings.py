@@ -32,6 +32,12 @@ ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS", cast=lambda host: [line.strip() for line in host.split(" ")]
 )
 DOMAIN = config("DOMAIN", default="http://localhost:8000")
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default=DOMAIN,
+    cast=lambda host: [line.strip() for line in host.split(" ")],
+)
+
 
 # Application definition
 
