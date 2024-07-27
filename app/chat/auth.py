@@ -3,12 +3,12 @@ from uuid import UUID
 from qr_pair.models import QRCode, ChatRoom
 
 
-def is_valid_uuid(uuid_str: str, version=4) -> bool:
+def is_valid_uuid(uuid_str: str) -> bool:
     """
     Helper function to validate UUID format
     """
     try:
-        UUID(uuid_str, version=version)
+        UUID(str(uuid_str))
     except ValueError:
         return False
     else:
