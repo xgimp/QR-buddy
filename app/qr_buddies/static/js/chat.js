@@ -10,7 +10,7 @@ const errorHelper = document.getElementById('invalid-helper');
 const errorBanner = document.getElementById('error');
 
 const chatSocket = new WebSocket(
-    'ws://'
+    window.location.protocol === 'https:' ? 'wss://' : 'ws://'
     + window.location.host
     + '/ws/chat/'
     + roomName
