@@ -12,6 +12,8 @@ services:
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
+      - db_folder:/app/data
+      # for dev
       - ./app:/app
     restart: unless-stopped
     ports:
@@ -19,14 +21,15 @@ services:
     depends_on:
       valkey:
         condition: service_healthy
-    # env_file:
-    #   - ./.env
+    env_file:
+      - ./app/.env
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
   
   valkey:
     image: valkey/valkey:7.2-alpine
     container_name: qr_buddies_valkey
     command: valkey-server /etc/valkey/valkey.conf
+    privileged: true
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       interval: 1s
@@ -42,3 +45,4 @@ volumes:
   web_db:
   static_volume:
   media_volume:
+  db_folder:

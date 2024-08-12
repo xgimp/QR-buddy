@@ -67,4 +67,4 @@ RUN chown -R appuser:appuser ${APP_HOME}
 # Switch to the non-privileged user to run the application.
 USER appuser
 RUN chmod +x ./entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
