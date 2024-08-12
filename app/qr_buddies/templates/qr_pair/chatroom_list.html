@@ -1,16 +1,51 @@
 {% extends 'base.html' %}
 
 
+{% block extra_css %}
+    <style>
+        svg.segno {
+            background: #fff;
+        }
+    </style>
+{% endblock extra_css %}
+
+
 {% block content %}
-<ul>
+<div class="container">
+    <h1>
+        Room List
+    </h1>
+    {% comment %}
+     <a role="button" href="#">
+        add
+    </a>
+    {% endcomment %}
+</div>
+
+<main class="container grid">
     {% for obj in object_list %}
-    <li>
-        {{obj}}
-        <a href="{% url 'qr_pair:chat_room_detail_view' obj.pk %}">
-            detail
-        </a>
-    </li>
+    <article class="card">
+        <header>
+            <strong>
+                {{obj.pk}}
+            </strong>
+        </header>
+        <div role="">
+            {% for qr_code in obj.get_qr_codes %}
+                {{ qr_code.qr_svg_string|safe }}
+            {% endfor %}
+        </div>
+
+        <footer role="group">
+        {% comment %}links to chat room{% endcomment %}
+            {% for qr_code in obj.get_qr_codes %}
+            <a role="button" href="{{qr_code.chat_room_link}}">
+                QR {{ forloop.counter }}
+            </a>
+            {% endfor %}
+
+        </footer>
+    </article>
     {% endfor %}
-</ul>
-    
+</main>
 {% endblock content %}

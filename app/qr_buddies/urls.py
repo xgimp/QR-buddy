@@ -21,7 +21,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path("chat/", include("chat.urls")),
-    path("admin/", admin.site.urls),
+    path("dj-admin/", admin.site.urls),
+    path("admin/", include("administration.urls")),
     path("", include("qr_pair.urls")),
 ]
 

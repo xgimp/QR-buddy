@@ -75,6 +75,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    #     our middleware
+    "administration.middleware.UserHaveToBeStaffMiddleware",
 ]
 
 ROOT_URLCONF = "qr_buddies.urls"
