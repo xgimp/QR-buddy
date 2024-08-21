@@ -15,9 +15,8 @@ class UserHaveToBeStaffMiddleware:
             # skip the middleware
             return self.get_response(request)
 
-        if (
-            request.path.startswith(self.ADMIN_URL_PATTERN)
-            and not request.user.is_staff
+        if request.path.startswith(self.ADMIN_URL_PATTERN) and not (
+            request.user.is_staff and request.user.is_active
         ):
             raise Http404()
 

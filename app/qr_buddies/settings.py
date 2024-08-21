@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # 3rd party apps
     "channels",
     # our apps
+    "administration",
     "qr_pair",
     "chat",
 ]
