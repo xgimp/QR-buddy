@@ -10,11 +10,7 @@ services:
     image: qr_buddies_web
     privileged: true
     volumes:
-      - static_volume:/app/static
-      - media_volume:/app/media
-      - db_folder:/app/data
-      # for dev
-      - ./app:/app
+      - ./app:/app:z
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -26,7 +22,7 @@ services:
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
   
   valkey:
-    image: valkey/valkey:7.2-alpine
+    image: docker.io/valkey/valkey:7.2-alpine
     container_name: qr_buddies_valkey
     command: valkey-server /etc/valkey/valkey.conf
     privileged: true
@@ -38,7 +34,7 @@ services:
     volumes:
       - ./compose/dev/valkey/valkey.conf:/etc/valkey/valkey.conf
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: unless-stopped
 
 volumes:

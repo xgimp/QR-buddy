@@ -33,17 +33,6 @@ WORKDIR $APP_HOME
 # Install dependencies for psycopg2 and Pillow
 #RUN apk add --no-cache libgcc libjpeg libwebp libpq
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
@@ -65,6 +54,5 @@ RUN mkdir -p $APP_HOME/static/ $APP_HOME/media/
 RUN chown -R appuser:appuser ${APP_HOME}
 
 # Switch to the non-privileged user to run the application.
-USER appuser
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["sh", "./entrypoint.sh"]
