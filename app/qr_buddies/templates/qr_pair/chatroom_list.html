@@ -6,6 +6,19 @@
         svg.segno {
             background: #fff;
         }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+            justify-items: stretch;
+            align-items: stretch;
+         }
+         .button-delete {
+            background-color: var(--pico-del-color);
+            border-color: var(--pico-del-color);
+         }
     </style>
 {% endblock extra_css %}
 
@@ -15,20 +28,20 @@
     <h1>
         Room List
     </h1>
-    {% comment %}
-     <a role="button" href="#">
-        add
+     <a role="button" href="{% url 'administration:create_room' %}">
+        + Add Room
     </a>
-    {% endcomment %}
 </div>
 
-<main class="container grid">
+<main class="container grid admin-grid">
     {% for obj in object_list %}
+    
     <article class="card">
         <header>
             <strong>
                 {{obj.pk}}
             </strong>
+
         </header>
         <div role="">
             {% for qr_code in obj.get_qr_codes %}
@@ -43,7 +56,7 @@
                 QR {{ forloop.counter }}
             </a>
             {% endfor %}
-
+            <a role="button" class="button-delete" href="{% url "administration:delete_room" obj.pk %}">Delete</a>
         </footer>
     </article>
     {% endfor %}
