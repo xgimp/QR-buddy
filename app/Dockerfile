@@ -50,9 +50,6 @@ COPY /app $APP_HOME
 # create directories for media and static files
 RUN mkdir -p $APP_HOME/static/ $APP_HOME/media/
 
-# chown all the files to the app user
-RUN chown -R appuser:appuser ${APP_HOME}
-
 # Switch to the non-privileged user to run the application.
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ["sh", "./entrypoint.sh"]
