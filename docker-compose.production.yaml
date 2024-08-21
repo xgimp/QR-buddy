@@ -20,7 +20,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./app/Dockerfile
+      dockerfile: ./compose/production/web/Dockerfile
       args:
         - BUILD_ENVIRONMENT=production  # dev|production
     container_name: qr_buddies_web

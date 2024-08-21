@@ -3,12 +3,12 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./app/Dockerfile
+      dockerfile: ./compose/dev/web/Dockerfile
       args:
         - BUILD_ENVIRONMENT=dev  # dev|production
     container_name: qr_buddies_web
     image: qr_buddies_web
-    privileged: true
+#    privileged: true
     volumes:
       - ./app:/app:z
     restart: unless-stopped
