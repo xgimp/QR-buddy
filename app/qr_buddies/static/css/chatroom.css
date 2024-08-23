@@ -1,39 +1,48 @@
 .container {
     margin-top: 1rem;
 }
+
 #error {
     display: none;
     background-color: var(--pico-form-element-invalid-focus-color);
 }
+
 #invalid-helper {
     color: var(--pico-form-element-invalid-focus-color);
 }
+
 #chat {
     height: 82vh;
     overflow-x: hidden;
     overflow-y: scroll;
 }
-.me, .buddy {
+
+.me,
+.buddy {
     width: fit-content;
 }
+
 .container-me {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 }
+
 .container-buddy {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 }
+
 .me {
     background-color: var(--pico-primary-background);
 }
+
 .buddy {
     background-color: var(--pico-secondary-background)
 }
 
 [data-theme=light],
 :root:not([data-theme=dark]) {
-  --pico-color: #c2c7d0
+    --pico-color: #c2c7d0
 }

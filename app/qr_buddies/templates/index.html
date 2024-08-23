@@ -1,18 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
 
 
 {% block extra_css %}
-<style>
-    .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    .container h1 {
-        text-align: center;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock extra_css %}
  
 

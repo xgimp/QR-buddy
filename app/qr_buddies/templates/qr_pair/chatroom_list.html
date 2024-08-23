@@ -1,25 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block extra_css %}
-    <style>
-        svg.segno {
-            background: #fff;
-        }
-        .admin-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            grid-column-gap: 20px;
-            grid-row-gap: 20px;
-            justify-items: stretch;
-            align-items: stretch;
-         }
-         .button-delete {
-            background-color: var(--pico-del-color);
-            border-color: var(--pico-del-color);
-         }
-    </style>
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
 {% endblock extra_css %}
 
 
