@@ -1,0 +1,23 @@
+<article class="card">
+    <header>
+        <strong>
+            {{obj.pk}}
+        </strong>
+
+    </header>
+    <div role="">
+        {% for qr_code in obj.get_qr_codes %}
+            {{ qr_code.qr_svg_string|safe }}
+        {% endfor %}
+    </div>
+
+    <footer role="group">
+    {% comment %}links to chat room{% endcomment %}
+        {% for qr_code in obj.get_qr_codes %}
+        <a role="button" href="{{qr_code.chat_room_link}}">
+            QR {{ forloop.counter }}
+        </a>
+        {% endfor %}
+        <a role="button" class="button-delete" href="{% url "administration:delete_room" obj.pk %}">Delete</a>
+    </footer>
+</article>

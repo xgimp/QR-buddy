@@ -34,7 +34,7 @@ def test_active_staff_user_can_access_admin_url(client, active_admin_user):
     response = client.get(admin_url)
 
     assert response.status_code == 200
-    assertTemplateUsed(response=response, template_name="qr_pair/chatroom_list.html")
+    assertTemplateUsed(response=response, template_name="administration/room_list.html")
 
 
 @pytest.mark.django_db
