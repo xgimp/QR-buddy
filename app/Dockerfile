@@ -52,4 +52,4 @@ RUN mkdir -p $APP_HOME/static/ $APP_HOME/media/
 
 # Switch to the non-privileged user to run the application.
 RUN chmod +x ./entrypoint.sh
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
