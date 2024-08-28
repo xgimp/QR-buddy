@@ -1,3 +1,5 @@
+# example production compose file for traefik proxy setup
+
 services:
 
   nginx:
@@ -12,7 +14,7 @@ services:
       - "traefik.http.routers.qrbuds.tls.certresolver=production"
       - "traefik.http.routers.qrbuds.tls=true"
       - "traefik.http.routers.qrbuds.entrypoints=web,websecure"
-      - "traefik.http.routers.qrbuds.rule=Host(`chat.bacovsky.online`) || Host(`www.chat.bacovsky.online`)"
+      - "traefik.http.routers.qrbuds.rule=Host(`mydomain.tld`) || Host(`www.mydomain.tld`)"
       - "traefik.http.routers.qrbuds.middlewares=redirect-www@file"
     depends_on:
       - web
