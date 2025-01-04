@@ -1,9 +1,10 @@
 # Run the App
 
-## With Podman /Docker
-first copy `.env.example` to `.env` 
-
+## With Podman or Docker compose
+first copy `./app/.env.example` to `./app/.env` and then run Podman or Docker compose. 
 ```
+cp ./app/.env.example ./app/.env 
+
 podman compose -f docker-compose.dev.yaml
 ```
 
@@ -24,22 +25,19 @@ venv/Scripts/activate
 
 Install requirements:
 ```
+# Install requirements
 pip install -r requirements/dev.txt
+
+# Install pre-commit hooks
+pre-commit install
+
 # Run the app
 python app/manage.py runserver
 ```
 
-For production copy `docker-compose.production.yaml.example` to `docker-compose.production.yaml`. Edit it to your liking and then run:
+### Run tests
 
-```
-podman compose -f docker-compose.production.yaml
-```
-
-Don't forget to create `.env` file for production environment!
-
-
-# Run tests
-
+You can run test and generate coverage with convenient script `test_coverage.sh` located in app's directory.
 ```
 # make sure the script is executable
 chmod +x ./app/test_coverage.sh
@@ -47,3 +45,13 @@ chmod +x ./app/test_coverage.sh
 # run tests
 ./app/test_coverage.sh 
 ```
+
+
+## How to run in Production
+
+Adjust `./app/.env` file for production environment, then copy `docker-compose.production.yaml.example` to `docker-compose.production.yaml`. Edit it to your liking and then run:
+
+```
+podman compose -f docker-compose.production.yaml
+```
+

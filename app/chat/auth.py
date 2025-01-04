@@ -15,7 +15,10 @@ def is_valid_uuid(uuid_str: str) -> bool:
         return True
 
 
-def is_permitted(room_name, user_id) -> bool:
+def is_permitted(room_name: str, user_id: str) -> bool:
+    """
+    Returns True if the specified user has access to specified room
+    """
     # validate input data
     if not all((is_valid_uuid(room_name), is_valid_uuid(user_id))):
         return False
