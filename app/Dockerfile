@@ -20,7 +20,7 @@ RUN python -m pip wheel \
       --wheel-dir \
       /usr/src/app/wheels -r requirements.txt
 
-FROM docker.io/python:${PYTHON_VERSION}-alpine as run-stage
+FROM docker.io/python:${PYTHON_VERSION}-alpine AS run-stage
 # Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr to avoid situations where
