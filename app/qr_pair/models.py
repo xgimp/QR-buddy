@@ -6,7 +6,7 @@ import segno
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import QuerySet, Q
 
 from chat.models import Message
 
@@ -24,7 +24,7 @@ class ChatRoom(models.Model):
         super().save()
 
     @property
-    def get_qr_codes(self):
+    def get_qr_codes(self) -> QuerySet["QRCode"]:
         """
         Return QR codes that have access to this room
         """
@@ -41,7 +41,7 @@ class QRCode(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def clean(self):
+    def clean(self) -> None:
         if QRCode.objects.filter(chat_room=self.chat_room).count() == 2:
             raise ValidationError("Already got 2 QR codes for this room")
 
@@ -53,7 +53,7 @@ class QRCode(models.Model):
         super().save()
 
     @property
-    def matching_qr(self):
+    def matching_qr(self) -> "QRCode":
         """
         Returns the other QR from the pair
         """
@@ -68,19 +68,19 @@ class QRCode(models.Model):
         return qr.svg_inline(scale=5)
 
     @property
-    def chat_room_link(self):
+    def chat_room_link(self) -> str:
         """
         Returns chat Room URL
         """
         return urljoin(settings.DOMAIN, f"/chat/{self.chat_room.id}/{self.id}/")
 
     @property
-    def chat_history(self):
+    def chat_history(self) -> QuerySet[Message]:
         """
         Return Chat history for room based on sender ID
         """
         history = Message.objects.filter(Q(sender=self) | Q(sender=self.matching_qr))
         return history.order_by("sent_at")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.id}"
