@@ -59,11 +59,15 @@ INSTALLED_APPS = [
 
 ASGI_APPLICATION = "qr_buddies.asgi.application"
 
+# Valkey settings
+VALKEY_HOST = config("VALKEY_HOST", default="valkey")
+VALKEY_PORT = config("VALKEY_PORT", default=6379, cast=int)
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("valkey", 6379)],
+            "hosts": [(VALKEY_HOST, VALKEY_PORT)],
         },
     },
 }

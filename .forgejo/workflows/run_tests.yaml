@@ -6,9 +6,22 @@ on:
     branches: [ master ]
 
 
+
 jobs:
   tests:
     runs-on: ubuntu-latest
+    container: node:24-bookworm-slim
+    services:
+      valkey:
+        image: valkey/valkey
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
     steps:
       - name: Checkout Code
@@ -16,8 +29,8 @@ jobs:
 
       - name: Install OS dependencies
         run: |
-          sudo apt-get update && 
-          sudo apt-get install python3-virtualenv --no-install-recommends -y
+          apt-get update && 
+          apt-get install python3-virtualenv redis-server --no-install-recommends -y
 
       - name: Setup app virtual environment
         run: |
@@ -26,6 +39,10 @@ jobs:
           pip install -r app/requirements/dev.txt
 
       - name: Run tests
+        env:
+          ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
+          VALKEY_HOST: localhost
+          VALKEY_PORT: 6379
         run: |
           source venv/bin/activate
           cd app && coverage run -m pytest -v . && coverage report
