@@ -8,13 +8,15 @@ services:
       - static_volume:/app/static
     networks:
       - traefik-proxy
+      - default
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.qrbuds.tls.certresolver=production"
       - "traefik.http.routers.qrbuds.tls=true"
+      - "traefik.docker.network=traefik-proxy"
       - "traefik.http.routers.qrbuds.entrypoints=web,websecure"
-      - "traefik.http.routers.qrbuds.rule=Host(`mydomain.tld`) || Host(`www.mydomain.tld`)"
+      - "traefik.http.routers.qrbuds.rule=Host(`chat.bacovsky.online`) || Host(`www.chat.bacovsky.online`)"
       - "traefik.http.routers.qrbuds.middlewares=redirect-www@file"
     depends_on:
       - web
@@ -22,7 +24,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./compose/production/web/Dockerfile
+      dockerfile: ./compose/web/Dockerfile
+      target: production
       args:
         - BUILD_ENVIRONMENT=production  # dev|production
     container_name: qr_buddies_web
@@ -32,7 +35,7 @@ services:
       - media_volume:/app/media
       - web_db:/app/data
     networks:
-      - traefik-proxy
+      - default
     restart: unless-stopped
     depends_on:
       valkey:
@@ -40,8 +43,7 @@ services:
     command: >
       sh -c "python manage.py collectstatic --no-input &&
              daphne -b 0.0.0.0 -p 9001 qr_buddies.asgi:application"
-             
-  
+
   valkey:
     image: valkey/valkey:7.2-alpine
     container_name: qr_buddies_valkey
@@ -52,9 +54,9 @@ services:
       timeout: 3s
       retries: 5
     volumes:
-      - ./compose/production/valkey/valkey.conf:/etc/valkey/valkey.conf
+      - ./compose/valkey/valkey.conf:/etc/valkey/valkey.conf
     networks:
-      - traefik-proxy
+      - default
     restart: unless-stopped
 
 volumes:
@@ -64,5 +66,6 @@ volumes:
 
 
 networks:
+  default:
   traefik-proxy:
     external: true

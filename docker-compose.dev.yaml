@@ -3,7 +3,8 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./compose/dev/web/Dockerfile
+      dockerfile: ./compose/web/Dockerfile
+      target: dev
       args:
         - BUILD_ENVIRONMENT=dev  # dev|production
     container_name: qr_buddies_web
@@ -32,7 +33,7 @@ services:
       timeout: 3s
       retries: 5
     volumes:
-      - ./compose/dev/valkey/valkey.conf:/etc/valkey/valkey.conf
+      - ./compose/valkey/valkey.conf:/etc/valkey/valkey.conf
     ports:
       - "6379:6379"
     restart: unless-stopped
